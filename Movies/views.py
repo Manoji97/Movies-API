@@ -78,21 +78,13 @@ class MoviesViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        query_title = request.GET.get('title', '')
-        query_ratings = request.GET.get('ratings', '')
-        query_year = request.GET.get('year', '')
-        query_genre = request.GET.get('genre', '')
-        query_person = request.GET.get('person', '')
-        if len(query) > 0:
-            q_lookup = (Q(Title__icontains = query_title) |
-                        Q(Ratings__iexact = query_ratings)|
-                        Q(Year_iexact = query_year)|
-                        Q(Genres__genre__iexact = query_genre)|
-                        Q(Directors__Name__icontains = query_person)|
-                        Q(Writers__Name__icontains = query_person))
-
-            queryset = queryset.filter(q_lookup).distinct()
-
+        query_title = request.GET.get('title', None)
+        query_rating = request.GET.get('rating', None)
+        query_year = request.GET.get('year', None)
+        query_genre = request.GET.get('genre', None)
+        query_person = request.GET.get('person', None)
+        
+        queryset = Movie.objects.search(query_title, query_rating, query_year, query_genre, query_person)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
