@@ -30,11 +30,11 @@ class GenreSerializer(serializers.ModelSerializer):
 class MovieSerializer(serializers.ModelSerializer):
 	Directors = PeopleSerializer(read_only=True, many=True)
 	Writers = PeopleSerializer(read_only=True, many=True)
-	Geners = GenreSerializer(read_only=True, many=True)
+	Genres = GenreSerializer(read_only=True, many=True)
 	class Meta:
 		model = Movie
 		fields = ['id', 'ImdbId', 'Title', 'Imdb_rating', 'Image_link', 'RunTime',
-				 'Year', 'Rating', 'Num_ratings', 'Geners', 'Directors', 'Writers']
+				 'Year', 'Rating', 'Num_ratings', 'Genres', 'Directors', 'Writers']
 
 class MovieMiniSerializer(serializers.ModelSerializer):
 	class Meta:

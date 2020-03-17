@@ -64,7 +64,7 @@ class Movie(models.Model):
     Year = models.CharField(max_length=4, null=True, blank=True)
     Rating = models.FloatField(null=True, blank=True, default=0)
     Num_ratings = models.IntegerField(null=True, blank=True, default=0)
-    Genres = models.ManyToManyField(Genre)
+    Genres = models.ManyToManyField(Genre, related_name='Genres')
     Directors = models.ManyToManyField(People, related_name='Directors')
     Writers = models.ManyToManyField(People, related_name='Writers')
 
