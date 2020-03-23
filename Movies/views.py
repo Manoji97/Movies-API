@@ -101,7 +101,9 @@ class MoviesViewset(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None):
         movie = get_object_or_404(self.queryset, pk=pk)
-        serializer = MovieSerializer(movie)
+        context = {'request':request,
+                    'movie_id' :pk}
+        serializer = MovieSerializer(movie, context=context)
         return Response(serializer.data)
 
     @action(detail=True, methods=['POST'])
