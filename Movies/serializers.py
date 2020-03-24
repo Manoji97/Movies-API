@@ -40,7 +40,6 @@ class MovieSerializer(serializers.ModelSerializer):
 	def get_Your_rating(self,obj):
 		request = self.context.get("request", None)
 		movie_id = self.context.get("movie_id", None)
-		print(request.user.id, movie_id)
 		if request.user.id:
 			m = Movie.objects.get(id = movie_id)
 			u = User.objects.get(id = request.user.id)
