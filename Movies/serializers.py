@@ -44,9 +44,9 @@ class MovieSerializer(serializers.ModelSerializer):
 		if request.user.id:
 			m = Movie.objects.get(id = movie_id)
 			u = User.objects.get(id = request.user.id)
-			new_rate = NewRating.objects.get(movie=m,user=u)
-			if new_rate:
-				return new_rate.rating
+			new_rate = NewRating.objects.filter(movie=m,user=u)
+			if len(new_rate) > 0:
+				return new_rate[0].rating
 		return None
 
 class MovieMiniSerializer(serializers.ModelSerializer):
