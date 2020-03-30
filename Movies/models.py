@@ -26,6 +26,15 @@ class Genre(models.Model):
 
 
 class MovieManager(models.Manager):
+    def getRecommendations(self, ids):
+        queryset = self.get_queryset()
+        q_lookup = Q()
+        if len(ids) > 1:
+            for i in ids:
+                q_lookup |= Q(id=i)
+        queryset = queryset.filter(q_lookup).distinct()
+        return queryset
+
     def mainsearch(self, mainsearch):
         queryset = self.get_queryset()
         q_lookup = Q()

@@ -10,6 +10,8 @@ from .pagination import StandardPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny, IsAuthenticated
 from django.db.models import Q
 
+from Recommendations.Recommendation_Train import Get_Recommendations
+
 
 class UserViewset(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -73,7 +75,8 @@ class MoviesViewset(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
     permission_classes_by_action = {'list': [AllowAny],
                                     'retrieve': [AllowAny],
-                                    'rate_movie': [IsAuthenticated]
+                                    'rate_movie': [IsAuthenticated],
+                                    'get_Recommendations': [AllowAny]
                                     }
 
     def list(self, request, *args, **kwargs):
@@ -101,9 +104,19 @@ class MoviesViewset(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None):
         movie = get_object_or_404(self.queryset, pk=pk)
-        context = {'request':request,
-                    'movie_id' :pk}
+        context = {'request': request,
+                   'movie_id': pk}
         serializer = MovieSerializer(movie, context=context)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['GET'])
+    def get_Recommendations(self, request, pk=None):
+        recommendations = Get_Recommendations()
+        recommendation_ids = recommendations.userRecommendations(id=pk)
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = Movie.objects.getRecommendations(recommendation_ids)
+        print(queryset)
+        serializer = MovieMiniSerializer(queryset, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=['POST'])
